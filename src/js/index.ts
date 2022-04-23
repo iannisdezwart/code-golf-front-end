@@ -87,25 +87,11 @@ const showChallenge = (i: number) =>
 	`
 }
 
-const leaderboardData = new Map<string, PublicLeaderboard>()
-
-const fetchLeaderboard = async (challenge: string) => {
-	if (leaderboardData.has(challenge))
-	{
-		return leaderboardData.get(challenge)
-	}
-
-	const response = await fetch(`${ API_URL }/leaderboard?challenge=${ challenge }`)
-	const leaderboard = await response.json() as PublicLeaderboard
-	leaderboardData.set(challenge, leaderboard)
-
-	return leaderboard
-}
-
 const showLeaderboard = async (i: number) =>
 {
 	const challenge = challenges[i]
-	const leaderboard = await fetchLeaderboard(challenge.challenge)
+	const response = await fetch(`${ API_URL }/leaderboard?challenge=${ challenge }`)
+	const leaderboard = await response.json() as PublicLeaderboard
 
 	const leaderboardEntries = Object.entries(leaderboard)
 		.map(([ lang, entries ]) => ({ lang, entry: entries[0] }))
@@ -148,7 +134,8 @@ const showLeaderboard = async (i: number) =>
 const showLangLeaderboard = async (i: number, language: string) =>
 {
 	const challenge = challenges[i]
-	const leaderboard = await fetchLeaderboard(challenge.challenge)
+	const response = await fetch(`${ API_URL }/leaderboard?challenge=${ challenge }`)
+	const leaderboard = await response.json() as PublicLeaderboard
 
 	const leaderboardEntries = Object.entries(leaderboard)
 		.filter(([ lang ]) => lang == language)[0][1]
