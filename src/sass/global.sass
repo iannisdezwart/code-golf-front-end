@@ -1,0 +1,94 @@
+$bg: #111
+$text: #ddd
+
+.box-container
+	display: flex
+	justify-content: center
+	align-items: center
+
+.box
+	margin: 1rem
+	padding: 1.5rem
+	background-color: lighten($bg, 5%)
+	border-radius: 1rem
+
+	display: flex
+	flex-direction: column
+	justify-content: center
+	align-items: center
+	text-align: center
+
+	.title
+		font-size: 1.5rem
+		font-weight: bold
+		margin-bottom: 1rem
+
+button
+	border: none
+	outline: none
+	background-color: transparent
+
+	color: $text
+	border: 1px solid $text
+	border-radius: .5rem
+	padding: .5rem
+	cursor: pointer
+
+	&:hover
+		color: $text
+		text-decoration: underline
+
+input
+	border: none
+	outline: none
+	background-color: transparent
+
+	color: $text
+	border: 1px solid $text
+	border-radius: .5rem
+	padding: .5rem
+
+code
+	background-color: darken($bg, 20%)
+	padding: 1.5rem
+	border-radius: .5rem
+	box-sizing: border-box
+	width: 600px
+	max-width: 100%
+
+	font-family: 'Anonymous Pro'
+
+table
+	border-collapse: collapse
+	padding: 1rem
+
+	th
+		padding: 1rem 2rem
+		background-color: lighten($bg, 10%)
+
+	td
+		padding: .5rem 2rem
+
+	tr
+		background-color: lighten($bg, 3%)
+
+	tr:nth-child(even)
+		background-color: lighten($bg, 5%)
+
+	th:first-child
+		border-top-left-radius: .5rem
+
+	th:last-child
+		border-top-right-radius: .5rem
+
+	tr:last-child td:first-child
+		border-bottom-left-radius: .5rem
+
+	tr:last-child td:last-child
+		border-bottom-right-radius: .5rem
+
+.hidden
+	display: none
+
+.bottom-buttons
+	margin-top: 1rem

@@ -1,0 +1,16 @@
+{
+	"name": "@iannisz/code-golf-front-end",
+	"version": "0.0.1",
+	"description": "",
+	"main": "compiler.js",
+	"scripts": {
+		"postinstall": "tsc",
+		"start": "node compiler.js"
+	},
+	"keywords": [],
+	"author": "Iannis de Zwart",
+	"license": "ISC",
+	"dependencies": {
+		"page-compiler": "^0.1.7"
+	}
+}
