@@ -90,7 +90,7 @@ const showChallenge = (i: number) =>
 const showLeaderboard = async (i: number) =>
 {
 	const challenge = challenges[i]
-	const response = await fetch(`${ API_URL }/leaderboard?challenge=${ challenge }`)
+	const response = await fetch(`${ API_URL }/leaderboard?challenge=${ challenge.challenge }`)
 	const leaderboard = await response.json() as PublicLeaderboard
 
 	const leaderboardEntries = Object.entries(leaderboard)
@@ -134,7 +134,7 @@ const showLeaderboard = async (i: number) =>
 const showLangLeaderboard = async (i: number, language: string) =>
 {
 	const challenge = challenges[i]
-	const response = await fetch(`${ API_URL }/leaderboard?challenge=${ challenge }`)
+	const response = await fetch(`${ API_URL }/leaderboard?challenge=${ challenge.challenge }`)
 	const leaderboard = await response.json() as PublicLeaderboard
 
 	const leaderboardEntries = Object.entries(leaderboard)
