@@ -33,6 +33,13 @@ interface SubmitResult
 	results: TestCaseResult[]
 }
 
+interface OngoingSubmission
+{
+	completedTestCases: number
+	totalTestCases: number
+	result?: SubmitResult
+}
+
 const challengesContainer = document.querySelector<HTMLDivElement>('#challenges-container')
 const challengesBox = document.querySelector<HTMLDivElement>('#challenges')
 const challengeInfoContainer = document.querySelector<HTMLDivElement>('#challenge-info-container')
@@ -206,7 +213,7 @@ const showSubmit = async (i: number) =>
 	</div>
 
 	<div class="spinner-container hidden">
-		<label>Running</label>
+		<label id="spinner-data">Running</label>
 		<div class="spinner">
 			<div></div>
 			<div></div>
@@ -252,6 +259,71 @@ const selectFile = async () =>
 	})
 }
 
+const checkSubmissionOutput = async (id: string, intervalId: number) =>
+{
+	const response = await fetch(`${ API_URL }/submission-status?id=${ id }`)
+	const submissionStatus = await response.json() as OngoingSubmission
+
+	if (submissionStatus == null || submissionStatus.completedTestCases == null)
+	{
+		return
+	}
+
+	const spinnerData = document.querySelector<HTMLLabelElement>('#spinner-data')
+
+	if (submissionStatus.result == null)
+	{
+		const done = submissionStatus.completedTestCases
+		const total = submissionStatus.totalTestCases
+		const percentage = Math.round(done / total * 100)
+		spinnerData.innerText = `${ done }/${ total } (${ percentage }%)`
+		return
+	}
+
+	const resultContainer = submitBox.querySelector<HTMLDivElement>('#result-container')
+
+	if (submissionStatus.result.state == 'pass')
+	{
+		resultContainer.innerHTML = /* html */ `
+		<p class="green">Your code passed all test cases!</p>
+		<p>
+			Your submission of ${ file.length } bytes was added to
+			the leaderboard.
+		</p>
+		`
+	}
+	else
+	{
+		resultContainer.innerHTML = /* html */ `
+		<p class="red">Your code failed one or more test cases!</p>
+		${ submissionStatus.result.results.map(result => /* html */ `
+		<h3>${ result.name }</h3>
+		<p>State: ${ result.state }</p>
+		<br><br>
+		<h4>Input</h4>
+		<code>${ escapeHtml(result.input) }</code>
+		<br><br>
+		<h4>Expected output</h4>
+		<code>${ escapeHtml(result.expectedOutput) }</code>
+		<br><br>
+		<h4>Actual output</h4>
+		<code>${ escapeHtml(result.output) }</code>
+		<br><br>
+		${ result.err ? /* html */ `
+		<h4>Error</h4>
+		<code>${ escapeHtml(JSON.stringify(result.err)) }</code>
+		` : '' }
+		`) }
+		`
+	}
+
+	const spinnerContainer = submitBox.querySelector<HTMLDivElement>('.spinner-container')
+	spinnerContainer.classList.add('hidden')
+
+	file = null
+	clearInterval(intervalId)
+}
+
 const submitCode = async () =>
 {
 	const name = submitBox.querySelector<HTMLInputElement>('#name-input').value
@@ -282,47 +354,12 @@ const submitCode = async () =>
 		}),
 	})
 
-	const body = await response.json() as SubmitResult
-	spinnerContainer.classList.add('hidden')
+	const submissionId = await response.text()
 
-	const resultContainer = submitBox.querySelector<HTMLDivElement>('#result-container')
-
-	if (body.state == 'pass')
+	const intervalId = setInterval(() =>
 	{
-		resultContainer.innerHTML = /* html */ `
-		<p class="green">Your code passed all test cases!</p>
-		<p>
-			Your submission of ${ file.length } bytes was added to
-			the leaderboard.
-		</p>
-		`
-	}
-	else
-	{
-		resultContainer.innerHTML = /* html */ `
-		<p class="red">Your code failed one or more test cases!</p>
-		${ body.results.map(result => /* html */ `
-		<h3>${ result.name }</h3>
-		<p>State: ${ result.state }</p>
-		<br><br>
-		<h4>Input</h4>
-		<code>${ escapeHtml(result.input) }</code>
-		<br><br>
-		<h4>Expected output</h4>
-		<code>${ escapeHtml(result.expectedOutput) }</code>
-		<br><br>
-		<h4>Actual output</h4>
-		<code>${ escapeHtml(result.output) }</code>
-		<br><br>
-		${ result.err ? /* html */ `
-		<h4>Error</h4>
-		<code>${ escapeHtml(JSON.stringify(result.err)) }</code>
-		` : '' }
-		`) }
-		`
-	}
-
-	file = null
+		checkSubmissionOutput(submissionId, intervalId as any as number)
+	}, 500)
 }
 
 const showHomeScreen = () =>
