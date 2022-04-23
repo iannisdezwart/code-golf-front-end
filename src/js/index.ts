@@ -311,7 +311,7 @@ const checkSubmissionOutput = async (id: string, intervalId: number) =>
 	clearInterval(intervalId)
 }
 
-const submitCode = async () =>
+const submitCode = async (id: number) =>
 {
 	const name = submitBox.querySelector<HTMLInputElement>('#name-input').value
 	const lang = submitBox.querySelector<HTMLInputElement>('#lang-input').value
@@ -336,7 +336,7 @@ const submitCode = async () =>
 		body: JSON.stringify({
 			name,
 			code: file,
-			challenge: challenges[0].challenge,
+			challenge: challenges[id].challenge,
 			lang
 		}),
 	})
