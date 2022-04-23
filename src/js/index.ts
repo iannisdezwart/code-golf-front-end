@@ -203,7 +203,7 @@ const showSubmit = async (i: number) =>
 	<select id="lang-input">
 		${ langs.map(lang => /* html */ `
 		<option value="${ lang }">${ lang }</option>
-		`) }
+		`).join('') }
 	</select>
 
 	<div class="bottom-buttons">
@@ -313,7 +313,7 @@ const checkSubmissionOutput = async (id: string, intervalId: number) =>
 		<h4>Error</h4>
 		<code>${ escapeHtml(JSON.stringify(result.err)) }</code>
 		` : '' }
-		`) }
+		`).join('') }
 		`
 	}
 
