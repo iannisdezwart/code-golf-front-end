@@ -68,7 +68,9 @@ const showChallenge = (i: number) =>
 	challengeInfoBox.innerHTML = /* html */ `
 	<h2>${ challenge.challenge }</h2>
 
-	${ challenge.description }
+	<div class="description">
+		${ challenge.description }
+	</div>
 
 	<div class="bottom-buttons">
 		<button onclick="showHomeScreen()">Go back</button>
